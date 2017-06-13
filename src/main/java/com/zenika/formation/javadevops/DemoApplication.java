@@ -22,7 +22,7 @@ public class DemoApplication {
 	@ResponseBody
 	String home() {
 		try {
-      return "Hello World !!! on " + InetAddress.getLocalHost().getHostAddress() + ":" + environment.getProperty("local.server.port");
+      return "Hello World !!! on " + InetAddress.getLocalHost().getHostAddress() + ":" + environment.getProperty("local.server.port") + "\n";
     } catch (UnknownHostException e) {
       throw new RuntimeException("Error when trying to get local IP address", e);
     }
