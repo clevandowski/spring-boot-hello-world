@@ -4,11 +4,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.zenika.formation.javadevops</groupId>
-  <artifactId>demo</artifactId>
+  <artifactId>spring-boot-hello-world</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>demo</name>
+  <name>spring-boot-hello-world</name>
   <description>Demo project for Spring Boot</description>
 
   <parent>
