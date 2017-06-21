@@ -18,11 +18,14 @@ public class DemoApplication {
 	@Autowired
 	Environment environment;
 
+	@Autowired
+  private DemoConfig demoConfig;
+  
 	@RequestMapping("/")
 	@ResponseBody
 	String home() {
 		try {
-      return "Hello World !!! on " + InetAddress.getLocalHost().getHostAddress() + ":" + environment.getProperty("local.server.port") + "\n";
+      return demoConfig.getCustomMessage() + " @" + InetAddress.getLocalHost().getHostAddress() + ":" + environment.getProperty("local.server.port") + "\n";
     } catch (UnknownHostException e) {
       throw new RuntimeException("Error when trying to get local IP address", e);
     }
