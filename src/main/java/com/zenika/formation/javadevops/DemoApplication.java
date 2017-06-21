@@ -17,23 +17,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ComponentScan("com.zenika.formation.javadevops")
 public class DemoApplication {
 
-	@Autowired
-	Environment environment;
+  @Autowired
+  Environment environment;
 
-	@Autowired
+  @Autowired
   private DemoConfig demoConfig;
-  
-	@RequestMapping("/")
-	@ResponseBody
-	String home() {
-		try {
-      return demoConfig.getCustomMessage() + " @" + InetAddress.getLocalHost().getHostAddress() + ":" + environment.getProperty("local.server.port") + "\n";
+
+  @RequestMapping("/")
+  @ResponseBody
+  String home() {
+    try {
+      return demoConfig.getCustomMessage() + " @" + InetAddress.getLocalHost().getHostAddress() + ":"
+          + environment.getProperty("local.server.port") + "\n";
     } catch (UnknownHostException e) {
       throw new RuntimeException("Error when trying to get local IP address", e);
     }
-	}
+  }
 
-	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(DemoApplication.class, args);
+  }
 }
