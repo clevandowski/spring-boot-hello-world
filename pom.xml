@@ -5,7 +5,7 @@
 
 	<groupId>com.zenika.formation.javadevops</groupId>
 	<artifactId>spring-boot-hello-world</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>spring-boot-hello-world</name>
