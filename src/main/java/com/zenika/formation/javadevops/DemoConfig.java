@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 public class DemoConfig {
 
   private String customMessage;
-  
+
   public DemoConfig() {
-    
+
   }
 
   public String getCustomMessage() {
