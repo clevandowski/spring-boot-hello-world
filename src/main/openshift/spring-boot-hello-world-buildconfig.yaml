@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+  creationTimestamp: null
+  labels:
+    app: spring-boot-hello-world
+  name: spring-boot-hello-world
+spec:
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: spring-boot-hello-world:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      ref: spring-cloud-kubernetes-integration
+      uri: https://github.com/clevandowski/spring-boot-hello-world.git
+    type: Git
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: openjdk18-openshift:latest
+    type: Source
+  triggers:
+  - github:
+      secret: OKlEwmPxFanZKgT9cwV3
+    type: GitHub
+  - generic:
+      secret: rBuugiben6pugEnT2s5W
+    type: Generic
+  - imageChange: {}
+    type: ImageChange
+  - type: ConfigChange
+status:
+  lastVersion: 0
+
