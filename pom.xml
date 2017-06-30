@@ -55,6 +55,7 @@
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>spring-cloud-kubernetes-core</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
