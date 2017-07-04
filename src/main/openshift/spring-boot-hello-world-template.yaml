@@ -1,3 +1,4 @@
+apiVersion: v1
 kind: Template
 metadata:
   creationTimestamp: null
@@ -41,7 +42,7 @@ objects:
           deploymentconfig: spring-boot-hello-world
       spec:
         containers:
-        - image: 172.30.1.1:5000/development/spring-boot-hello-world@sha256:a82705f85314fe2cfd0f1b8b50105584bf14f0de78d070a989e5c65250b4def2
+        - image: null
           imagePullPolicy: Always
           name: spring-boot-hello-world
           ports:
