@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ComponentScan("com.zenika.formation.javadevops")
 public class DemoApplication {
 
-//  @Value("${username}")
+  // @Value("${username}")
   private String username;
-  
+
   @Autowired
   Environment environment;
 
@@ -39,14 +39,17 @@ public class DemoApplication {
   }
 
   public static void main(String[] args) {
-    Enumeration<?> propertyEnum = System.getProperties().propertyNames();
+    displaySystemProperties();
+    
+    SpringApplication.run(DemoApplication.class, args);
+  }
   
+  private static void displaySystemProperties() {
+    Enumeration<?> propertyEnum = System.getProperties().propertyNames();
     while (propertyEnum.hasMoreElements()) {
       String key = (String) propertyEnum.nextElement();
       String value = (String) System.getProperty(key);
       System.out.println(key + "=" + value);
-    }
-    
-    SpringApplication.run(DemoApplication.class, args);
+    }    
   }
 }
