@@ -19,20 +19,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ComponentScan("com.zenika.formation.javadevops")
 public class DemoApplication {
 
-  @Value("${username}")
-  private String username;
-
   @Autowired
   Environment environment;
 
   @Autowired
   private DemoConfig demoConfig;
 
+  @Autowired
+  private SecretConfig secretConfig;
+
   @RequestMapping("/")
   @ResponseBody
   String home() {
     try {
-      return demoConfig.getCustomMessage() + " " + username + "@" + InetAddress.getLocalHost().getHostAddress() + ":"
+      return demoConfig.getCustomMessage() + " " + secretConfig.getUsername() + "@" + InetAddress.getLocalHost().getHostAddress() + ":"
           + environment.getProperty("local.server.port") + "\n";
     } catch (UnknownHostException e) {
       throw new RuntimeException("Error when trying to get local IP address", e);
