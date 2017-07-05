@@ -2,9 +2,9 @@ package com.zenika.formation.javadevops;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ComponentScan("com.zenika.formation.javadevops")
 public class DemoApplication {
 
-  @Value("${username}")
+//  @Value("${username}")
   private String username;
   
   @Autowired
@@ -39,6 +39,14 @@ public class DemoApplication {
   }
 
   public static void main(String[] args) {
+    Enumeration<?> propertyEnum = System.getProperties().propertyNames();
+  
+    while (propertyEnum.hasMoreElements()) {
+      String key = (String) propertyEnum.nextElement();
+      String value = (String) System.getProperty(key);
+      System.out.println(key + "=" + value);
+    }
+    
     SpringApplication.run(DemoApplication.class, args);
   }
 }
