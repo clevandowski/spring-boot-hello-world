@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ComponentScan("com.zenika.formation.javadevops")
 public class DemoApplication {
 
+  @Value("${username}")
+  private String username;
+  
   @Autowired
   Environment environment;
 
@@ -27,7 +31,7 @@ public class DemoApplication {
   @ResponseBody
   String home() {
     try {
-      return demoConfig.getCustomMessage() + " " + environment.getProperty("username") + "@" + InetAddress.getLocalHost().getHostAddress() + ":"
+      return demoConfig.getCustomMessage() + " " + username + "@" + InetAddress.getLocalHost().getHostAddress() + ":"
           + environment.getProperty("local.server.port") + "\n";
     } catch (UnknownHostException e) {
       throw new RuntimeException("Error when trying to get local IP address", e);
