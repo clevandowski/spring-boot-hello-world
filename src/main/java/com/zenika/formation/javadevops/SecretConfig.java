@@ -6,7 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @ConfigurationProperties
-@PropertySource("${spring.cloud.kubernetes.secrets.paths}")
+@PropertySource("file:${spring.cloud.kubernetes.secrets.paths}")
 public class SecretConfig {
   
   private String username;
