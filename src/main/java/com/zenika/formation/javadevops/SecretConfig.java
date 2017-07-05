@@ -8,12 +8,12 @@ import org.springframework.context.annotation.PropertySource;
 @ConfigurationProperties
 @PropertySource("${spring.cloud.kubernetes.secrets.paths}")
 public class SecretConfig {
-  
+
   private String username;
   private String password;
-  
+
   public SecretConfig() {
-    
+
   }
 
   public String getUsername() {
