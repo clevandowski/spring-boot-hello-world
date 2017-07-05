@@ -27,7 +27,7 @@ public class DemoApplication {
   @ResponseBody
   String home() {
     try {
-      return demoConfig.getCustomMessage() + " @" + InetAddress.getLocalHost().getHostAddress() + ":"
+      return demoConfig.getCustomMessage() + " " + environment.getProperty("username") + "@" + InetAddress.getLocalHost().getHostAddress() + ":"
           + environment.getProperty("local.server.port") + "\n";
     } catch (UnknownHostException e) {
       throw new RuntimeException("Error when trying to get local IP address", e);
