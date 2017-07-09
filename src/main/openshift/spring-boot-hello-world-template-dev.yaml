@@ -1,0 +1,259 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: spring-boot-hello-world-template
+parameters:
+- name: NAMESPACE
+  required: true
+- name: GIT_BRANCH
+  required: true
+  value: spring-cloud-kubernetes-secret
+- name: DEMO_CUSTOM_MESSAGE
+  required: true
+  value: Hello World in ${NAMESPACE} environment !
+- name: SPRING_APPLICATION_NAME
+  required: true
+  value: spring-boot-hello-world
+- name: SPRING_CLOUD_KUBERNETES_RELOAD_ENABLED
+  required: true
+  value: "true"
+- name: SPRING_CLOUD_KUBERNETES_SECRETS_PATHS
+  required: true
+  value: file:/etc/secrets/spring-boot-hello-world-secret.properties
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: spring-boot-hello-world
+    name: spring-boot-hello-world
+  spec:
+    replicas: 1
+    selector:
+      app: spring-boot-hello-world
+      deploymentconfig: spring-boot-hello-world
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: spring-boot-hello-world
+          deploymentconfig: spring-boot-hello-world
+      spec:
+        containers:
+        - image: 172.30.1.1:5000/${NAMESPACE}/spring-boot-hello-world@sha256:0bf975cac8c19162f46e5c7ac4c4a95f745ad4d773e8f65a0985d20737f9afb5
+          imagePullPolicy: Always
+          name: spring-boot-hello-world
+          ports:
+          - containerPort: 8443
+            protocol: TCP
+          - containerPort: 8778
+            protocol: TCP
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /etc/secrets
+            name: volume-spring-boot-hello-world-secret
+            readOnly: true
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: volume-spring-boot-hello-world-secret
+          secret:
+            defaultMode: 420
+            secretName: spring-boot-hello-world
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - spring-boot-hello-world
+        from:
+          kind: ImageStreamTag
+          name: spring-boot-hello-world:latest
+          namespace: ${NAMESPACE}
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: spring-boot-hello-world
+    name: spring-boot-hello-world
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: 8443-tcp
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    - name: 8778-tcp
+      port: 8778
+      protocol: TCP
+      targetPort: 8778
+    selector:
+      app: spring-boot-hello-world
+      deploymentconfig: spring-boot-hello-world
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: spring-boot-hello-world
+    name: spring-boot-hello-world
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: spring-boot-hello-world:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        ref: ${GIT_BRANCH}
+        uri: https://github.com/clevandowski/spring-boot-hello-world.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: openjdk18-openshift:latest
+      type: Source
+    triggers:
+    - github:
+        secret: OKlEwmPxFanZKgT9cwV3
+      type: GitHub
+    - generic:
+        secret: rBuugiben6pugEnT2s5W
+      type: Generic
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: spring-boot-hello-world
+    name: spring-boot-hello-world
+  spec:
+    host: spring-boot-hello-world-${NAMESPACE}.192.168.99.100.nip.io
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: spring-boot-hello-world
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2017-06-22T09:59:33Z
+        status: "True"
+        type: Admitted
+      host: spring-boot-hello-world-${NAMESPACE}.192.168.99.100.nip.io
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  data:
+    demo.customMessage: ${DEMO_CUSTOM_MESSAGE}
+    spring.application.name: ${SPRING_APPLICATION_NAME}
+    spring.cloud.kubernetes.reload.enabled: ${SPRING_CLOUD_KUBERNETES_RELOAD_ENABLED}
+    spring.cloud.kubernetes.secrets.paths: ${SPRING_CLOUD_KUBERNETES_SECRETS_PATHS}
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: null
+    name: spring-boot-hello-world
+- apiVersion: v1
+  data:
+    spring-boot-hello-world-secret.properties: cGFzc3dvcmQ9cGFzc3dvcmQtZGV2CnVzZXJuYW1lPWN5cmlsbGU=
+  kind: Secret
+  metadata:
+    creationTimestamp: null
+    name: spring-boot-hello-world
+  type: Opaque
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+      openshift.io/image.dockerRepositoryCheck: 2017-07-07T12:19:11Z
+    creationTimestamp: null
+    generation: 2
+    labels:
+      app: spring-boot-hello-world
+    name: openjdk18-openshift
+  spec:
+    tags:
+    - annotations:
+        openshift.io/imported-from: registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift
+      from:
+        kind: DockerImage
+        name: registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift
+      generation: 2
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: Source
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: spring-boot-hello-world
+    name: spring-boot-hello-world
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: 172.30.1.1:5000/${NAMESPACE}/spring-boot-hello-world:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
