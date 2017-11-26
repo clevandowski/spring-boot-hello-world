@@ -1,4 +1,4 @@
-node() {
+node("basic-slave") {
     // stage("checkout") {
     //     checkout([$class: 'GitSCM', branches: [[name: '*/jenkinsfile']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/clevandowski/spring-boot-hello-world.git']]])
     // }
